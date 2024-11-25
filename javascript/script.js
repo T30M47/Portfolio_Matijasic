@@ -42,11 +42,13 @@ function handleScroll(event) {
     opacity = Math.max(0, Math.min(1, opacity));
     splash.style.opacity = opacity;
 
-    // Navigation logic: Only navigate when opacity hits 0 and delay the transition
-    if (opacity <= 0 && !navigationTimeout) {
-        navigationTimeout = setTimeout(() => {
-            navigateToHome();
-        }, 1000); // Delay increased to 1000ms
+     // kad je blizu 0, prebaci na home.html
+     if (opacity <= 0) {
+        splash.classList.add('fade_out');
+        // nakon 1 sekunde, prebaci na home.html
+        setTimeout(() => {
+            window.location.href = "home.html";
+        }, 500);
     }
 
     // Clear navigation if opacity is restored above 0
@@ -56,9 +58,3 @@ function handleScroll(event) {
     }
 }
 
-function navigateToHome() {
-    splash.classList.add('fade_out');
-    setTimeout(() => {
-        window.location.href = "html/home.html";
-    }, 500); // Longer fade-out delay (2 seconds)
-}
