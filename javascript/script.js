@@ -60,5 +60,5 @@ function navigateToHome() {
     splash.classList.add('fade_out');
     setTimeout(() => {
         window.location.href = "html/home.html";
-    }, 2000); // Longer fade-out delay (2 seconds)
+    }, 500); // Longer fade-out delay (2 seconds)
 }
