@@ -14,7 +14,7 @@ arrow.addEventListener('click', function(event)
     splash.classList.add('fade_out');
     // nakon 1 sekunde, prebaci na home.html
     setTimeout(() => {
-        window.location.href = "home.html";
+        window.location.href = "html/home.html";
     }, 1000);
 }
 );
@@ -51,7 +51,7 @@ function handleScroll(event) {
         splash.classList.add('fade_out');
         // nakon 1 sekunde, prebaci na home.html
         setTimeout(() => {
-            window.location.href = "home.html";
+            window.location.href = "html/home.html";
         }, 500);
     }
 }
