@@ -1,44 +1,51 @@
+// za animaciju strelice na splash
 const arrow = document.querySelector('.scroll-down');
+// Za prijelaz na home.html, odabir splash page elementa
 const splash = document.querySelector('.splash-page');
+// za praćenje vidljivosti
 let opacity = 1.0;
-let lastTouchY = 0; // For tracking touch positions on mobile
-let navigationTimeout = null; // To prevent premature navigation
+// za praćenje dodira na mobitelu
+let lastTouchY = 0; 
 
-// Arrow click event
-arrow.addEventListener('click', function (event) {
-    event.preventDefault();
-    navigateToHome();
-});
-
-// Scroll and touchmove events
+//klikanje na strelicu 
+arrow.addEventListener('click', function(event)
+{
+    event.preventDefault() // da ne navigira odmah
+    splash.classList.add('fade_out');
+    // nakon 1 sekunde, prebaci na home.html
+    setTimeout(() => {
+        window.location.href = "html/home.html";
+    }, 1000);
+}
+);
+// čekanje na skrolanje ili pomicanje prema dole s dodirom
 window.addEventListener('wheel', handleScroll);
 window.addEventListener('touchmove', handleScroll);
 window.addEventListener('touchend', () => {
-    lastTouchY = 0; // Reset after touch ends
+    lastTouchY = 0; // za reset kad prestane dodir
 });
 
 function handleScroll(event) {
     let delta = 0;
 
     if (event.type === 'wheel') {
-        delta = event.deltaY; // For desktop scroll
+        delta = event.deltaY; // za skrol na računalu i detekciju smjera
     } else if (event.type === 'touchmove') {
         if (lastTouchY) {
-            delta = lastTouchY - event.touches[0].clientY; // Positive delta means scrolling down
+            delta = lastTouchY - event.touches[0].clientY; // ako je pozitivnoi ide prema dole
         }
         lastTouchY = event.touches[0].clientY;
     }
 
-    // Adjust opacity based on scroll direction
+ 
     if (delta > 0) {
-        // Scrolling downward: reduce opacity
+         // ako je pozitivno, ide prema dole, znači smanji vidljivost
         opacity -= 0.05;
     } else if (delta < 0) {
-        // Scrolling upward: increase opacity
         opacity += 0.05;
     }
 
-    // Clamp opacity between 0 and 1
+    //da ne ide više od 1 i manje od 0
     opacity = Math.max(0, Math.min(1, opacity));
     splash.style.opacity = opacity;
 
@@ -47,14 +54,8 @@ function handleScroll(event) {
         splash.classList.add('fade_out');
         // nakon 1 sekunde, prebaci na home.html
         setTimeout(() => {
-            window.location.href = "home.html";
+            window.location.href = "html/home.html";
         }, 500);
-    }
-
-    // Clear navigation if opacity is restored above 0
-    if (opacity > 0 && navigationTimeout) {
-        clearTimeout(navigationTimeout);
-        navigationTimeout = null;
     }
 }
 
