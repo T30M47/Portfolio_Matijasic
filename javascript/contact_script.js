@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Reset the border if valid
             emailField.style('border', '1px solid #ced4da');
+            emailField.attr('placeholder', 'Email');
         }
     });
 
