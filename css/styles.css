@@ -43,6 +43,16 @@ body, html {
     font-style: italic;
 }
 
+@media (max-width: 768px) {
+    .splash-page .logo {
+        max-width: 200px; 
+    }
+
+    .splash-page .quote {
+        font-size: 1.4em; 
+    }
+}
+
 .btn.btn-outline-dark {
     background-color: #364f59;  
     color: #ffffff;  
