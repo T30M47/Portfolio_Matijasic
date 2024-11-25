@@ -1,64 +1,50 @@
-// Za animaciju strelice na splash
 const arrow = document.querySelector('.scroll-down');
-// Za prijelaz na home.html, odabir splash page elementa
 const splash = document.querySelector('.splash-page');
-// za praćenje vidljivosti
 let opacity = 1.0;
+let lastTouchY = 0; 
 
 
-
-//klikanje na strelicu 
-arrow.addEventListener('click', function(event)
-{
-    event.preventDefault() // da ne navigira odmah
+arrow.addEventListener('click', function (event) {
+    event.preventDefault();
     splash.classList.add('fade_out');
-    // nakon 1 sekunde, prebaci na home.html
     setTimeout(() => {
         window.location.href = "html/home.html";
     }, 1000);
-}
-);
+});
 
 
-
-
-// čekanje na skrolanje ili pomicanje prema dole s dodirom
 window.addEventListener('wheel', handleScroll);
 window.addEventListener('touchmove', handleScroll);
+window.addEventListener('touchend', () => {
+    lastTouchY = 0; 
+});
 
-// funkcija za obradu skrola
 function handleScroll(event) {
-    // dohvaćanje točnog elementa
-    const splash = document.querySelector('.splash-page');
-    // smanji ili povećaj vidljivost prema skrolu
-    const delta = event.deltaY; // Za detekciju smjera skrola
+    let delta = 0;
 
-    if (delta > 0) {
-        // ako je pozitivno, ide prema dole, znači smanji vidljivost
-        opacity -= 0.05; 
-    } else {
-        opacity += 0.05; 
+    if (event.type === 'wheel') {
+        delta = event.deltaY; 
+    } else if (event.type === 'touchmove') {
+        if (lastTouchY) {
+            delta = event.touches[0].clientY - lastTouchY;
+        }
+        lastTouchY = event.touches[0].clientY;
     }
 
-    //da ne ide više od 1 i manje od 0
-    opacity = Math.max(0, opacity); 
-    opacity = Math.min(1, opacity); 
-    
+
+    if (delta > 0) {
+        opacity -= 0.05;
+    } else if (delta < 0) {
+        opacity += 0.05;
+    }
+
+    opacity = Math.max(0, Math.min(1, opacity)); 
     splash.style.opacity = opacity;
 
-    // kad je blizu 0, prebaci na home.html
     if (opacity <= 0) {
         splash.classList.add('fade_out');
-        // nakon 1 sekunde, prebaci na home.html
         setTimeout(() => {
             window.location.href = "html/home.html";
         }, 500);
     }
 }
-
-
-
-
-
-
-
