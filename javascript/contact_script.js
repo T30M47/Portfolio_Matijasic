@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             emailField.attr('placeholder', 'Neispravan unos, Email mora sadržavati "@"');
             submitButton.property('disabled', true); 
         } else {
-            // Reset the border if valid
+            // za reset polja
             emailField.style('border', '1px solid #ced4da');
             emailField.attr('placeholder', 'Email');
         }
