@@ -3,37 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.gstatic.com https://apis.google.com 'unsafe-inline' 'unsafe-eval' blob: data:;">
-  <title>Google Analytics Data Visualization</title>
-  <script src="../javascript/auth.js"></script>
-  <script src="../javascript/analytics.js"></script>
-  <script src="https://apis.google.com/js/api.js" onload="loadGoogleAPI()" async defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f4f4f4;
-    }
-    #chart {
-      max-width: 600px;
-      margin: 20px auto;
-      height: 400px;
-    }
-  </style>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://apis.google.com https://accounts.google.com 'unsafe-inline';">
+  <title>Google Analytics Data</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="../javascript/auth.js" defer></script>
+  <script src="../javascript/analytics.js" defer></script>
 </head>
 <body>
   <h1>Google Analytics Data Visualization</h1>
-  <p>Podaci o korisnicima iz Google Analytics-a prikazani u grafu.</p>
+  <p>Prijavite se kako biste vidjeli podatke.</p>
 
-  <!-- Auth buttons -->
-  <button id="authorize_button" onclick="handleAuthClick()">Prijavite se</button>
-  <button id="signout_button" onclick="handleSignoutClick()" style="display:none;">Odjavite se</button>
+  <button id="authorize_button">Prijavite se</button>
+  <button id="signout_button" style="display:none;">Odjavite se</button>
 
-  <!-- Canvas for rendering the chart -->
-  <canvas id="chart"></canvas>
-
-  <script src="../javascript/app.js"></script>
+  <canvas id="chart" style="max-width: 600px; margin: 20px auto; height: 400px;"></canvas>
 </body>
 </html>
