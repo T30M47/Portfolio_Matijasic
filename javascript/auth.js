@@ -50,9 +50,12 @@ function updateSigninStatus(isSignedIn) {
 
 function handleAuthClick() {
     gapi.auth2.getAuthInstance().signIn().then(() => {
+        console.log('Prijava uspješna');
         updateSigninStatus(true);
         fetchAnalyticsData(); // Dohvati podatke odmah nakon prijave
-    });
+    },
+    (error) => {console.error('Greška u prijavi: ', error);}
+);
 }
 
 function handleSignoutClick() {
