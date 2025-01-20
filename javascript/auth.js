@@ -66,4 +66,6 @@ function handleSignoutClick() {
     });
 }
 
-gapi.load('client:auth2', initClient);
+function loadGoogleAPI() {
+    gapi.load('client:auth2', initClient); // 'client' i 'auth2' su moduli koji će se učitati
+}
