@@ -11,9 +11,9 @@ async function fetchDataAndRenderChart() {
     }
   }
   
-  // Poziv funkcije za dohvaćanje podataka nakon uspješne prijave
-  gapi.auth2.getAuthInstance().isSignedIn.listen(isSignedIn => {
-    if (isSignedIn) {
-      fetchDataAndRenderChart();
-    }
-  });
+// Poziv funkcije za dohvaćanje podataka nakon uspješne prijave
+gapi.auth2.getAuthInstance().isSignedIn.listen(isSignedIn => {
+if (isSignedIn) {
+    fetchDataAndRenderChart();
+}
+});

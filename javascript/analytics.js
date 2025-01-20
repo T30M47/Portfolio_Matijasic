@@ -40,7 +40,7 @@
  */
 async function fetchAnalyticsData() {
     const response = await gapi.client.analyticsdata.properties.runReport({
-        property: "properties/YOUR_PROPERTY_ID",
+        property: "properties/443269906",
         requestBody: {
             dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
             dimensions: [{ name: "country" }, { name: "deviceCategory" }, {
