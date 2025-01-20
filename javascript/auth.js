@@ -70,7 +70,7 @@ function loadGoogleAPI() {
     gapi.load('client:auth2', initClient); // 'client' i 'auth2' su moduli koji će se učitati
 }*/
 
-const CLIENT_ID = '214036241518-be5frrk0bus3h05oo3dt6b2t1j19onr3.apps.googleusercontent.com';
+/*const CLIENT_ID = '214036241518-be5frrk0bus3h05oo3dt6b2t1j19onr3.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyAJugTkVuqv5BbYEPm9rr7U4mPSA5fvdmI';
 const SCOPES = 'https://www.googleapis.com/auth/analytics.readonly';
 
@@ -119,4 +119,70 @@ function handleSignoutClick() {
 function updateSigninStatus(isSignedIn) {
   document.getElementById('authorize_button').style.display = isSignedIn ? 'none' : 'inline';
   document.getElementById('signout_button').style.display = isSignedIn ? 'inline' : 'none';
+}*/
+
+const CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
+const API_KEY = 'YOUR_API_KEY';
+const SCOPES = 'https://www.googleapis.com/auth/analytics.readonly';
+
+let tokenClient = null;
+let accessToken = null;
+
+document.getElementById('authorize_button').addEventListener('click', () => handleAuthClick());
+document.getElementById('signout_button').addEventListener('click', () => handleSignoutClick());
+
+function initClient() {
+  gapi.load('client', () => {
+    gapi.client.setApiKey(API_KEY);
+    gapi.client.load('https://analyticsdata.googleapis.com/$discovery/rest?version=v1')
+      .then(() => console.log('Google API initialized'))
+      .catch(err => console.error('Error loading API:', err));
+  });
+
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: (response) => {
+      if (response.error) {
+        console.error('Authorization failed', response);
+        return;
+      }
+      accessToken = response.access_token;
+      updateSigninStatus(true);
+    },
+  });
 }
+
+function handleAuthClick() {
+  if (!tokenClient) {
+    console.error('Token client not initialized. Make sure initClient has been called.');
+    return;
+  }
+
+  if (!accessToken) {
+    tokenClient.requestAccessToken();
+  }
+}
+
+function handleSignoutClick() {
+  if (!accessToken) {
+    console.error('No access token to revoke.');
+    return;
+  }
+
+  google.accounts.oauth2.revoke(accessToken, () => {
+    console.log('Token revoked.');
+    accessToken = null;
+    updateSigninStatus(false);
+  });
+}
+
+function updateSigninStatus(isSignedIn) {
+  document.getElementById('authorize_button').style.display = isSignedIn ? 'none' : 'inline';
+  document.getElementById('signout_button').style.display = isSignedIn ? 'inline' : 'none';
+}
+
+// Pozovi initClient kada se stranica učita
+document.addEventListener('DOMContentLoaded', () => {
+  initClient();
+});
