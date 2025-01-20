@@ -40,26 +40,17 @@
  */
 async function fetchAnalyticsData() {
     const response = await gapi.client.analyticsdata.properties.runReport({
-      property: "properties/YOUR_PROPERTY_ID", // Zamijenite s vašim Google Analytics Property ID
-      requestBody: {
-        dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
-        dimensions: [{ name: "country" }, { name: "deviceCategory" }, { name: "pagePath" }],
-        metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "averageSessionDuration" }]
-      }
+        property: "properties/YOUR_PROPERTY_ID",
+        requestBody: {
+            dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+            dimensions: [{ name: "country" }, { name: "deviceCategory" }, {
+                name: "pagePath"
+            }],
+            metrics: [{ name: "activeUsers" }, { name: "sessions" }, {
+                name:
+                    "averageSessionDuration"
+            }]
+        }
     });
-  
-    const data = parseAnalyticsData(response.result);
-    renderChart(data);
-  }
-  
-  function parseAnalyticsData(result) {
-    const labels = [];
-    const values = [];
-  
-    result.rows.forEach(row => {
-      labels.push(row.dimensionValues[0].value); // Country
-      values.push(row.metricValues[0].value); // Active Users
-    });
-  
-    return { labels, values };
-  }  
+    console.log(response.result);
+}
