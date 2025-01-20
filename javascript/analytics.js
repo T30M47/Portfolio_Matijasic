@@ -38,50 +38,25 @@
 /**
  * Fetch Google Analytics Data
  */
-function fetchAnalyticsData() {
-    if (!accessToken) {
-      console.error('No access token. Please sign in first.');
-      return;
-    }
+async function fetchAnalyticsData() {
+    try {
+      const response = await gapi.client.analyticsdata.properties.runReport({
+        property: "properties/443269906",
+        requestBody: {
+          dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+          dimensions: [{ name: "country" }, { name: "deviceCategory" }, { name: "pagePath" }],
+          metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "averageSessionDuration" }],
+        },
+      });
   
-    gapi.client.analyticsdata.properties.runReport({
-      property: 'properties/443269906', // Replace with your property ID
-      requestBody: {
-        dateRanges: [{ startDate: '30daysAgo', endDate: 'today' }],
-        dimensions: [{ name: 'country' }],
-        metrics: [{ name: 'activeUsers' }],
-      },
-    })
-      .then(response => {
-        console.log('Analytics data:', response.result);
-        renderChart(response.result);
-      })
-      .catch(err => console.error('Error fetching data:', err));
+      console.log(response.result);
+  
+      const labels = response.result.rows.map(row => row.dimensionValues[0].value); // Example: Country
+      const values = response.result.rows.map(row => parseInt(row.metricValues[0].value)); // Example: Active Users
+  
+      renderChart({ labels, values });
+    } catch (error) {
+      console.error("Error fetching analytics data:", error);
+    }
   }
   
-  function renderChart(data) {
-    const ctx = document.getElementById('chart').getContext('2d');
-    const countries = data.rows.map(row => row.dimensionValues[0].value);
-    const users = data.rows.map(row => parseInt(row.metricValues[0].value, 10));
-  
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: countries,
-        datasets: [{
-          label: 'Active Users',
-          data: users,
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-        }],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: true },
-          tooltip: { enabled: true },
-        },
-      },
-    });
-  }  
