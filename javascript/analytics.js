@@ -39,24 +39,27 @@
  * Fetch Google Analytics Data
  */
 async function fetchAnalyticsData() {
-    try {
-      const response = await gapi.client.analyticsdata.properties.runReport({
-        property: "properties/443269906",
-        requestBody: {
-          dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
-          dimensions: [{ name: "country" }, { name: "deviceCategory" }, { name: "pagePath" }],
-          metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "averageSessionDuration" }],
-        },
-      });
+    const response = await gapi.client.analyticsdata.properties.runReport({
+      property: "properties/YOUR_PROPERTY_ID", // Zamijenite s vašim Google Analytics Property ID
+      requestBody: {
+        dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+        dimensions: [{ name: "country" }, { name: "deviceCategory" }, { name: "pagePath" }],
+        metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "averageSessionDuration" }]
+      }
+    });
   
-      console.log(response.result);
-  
-      const labels = response.result.rows.map(row => row.dimensionValues[0].value); // Example: Country
-      const values = response.result.rows.map(row => parseInt(row.metricValues[0].value)); // Example: Active Users
-  
-      renderChart({ labels, values });
-    } catch (error) {
-      console.error("Error fetching analytics data:", error);
-    }
+    const data = parseAnalyticsData(response.result);
+    renderChart(data);
   }
   
+  function parseAnalyticsData(result) {
+    const labels = [];
+    const values = [];
+  
+    result.rows.forEach(row => {
+      labels.push(row.dimensionValues[0].value); // Country
+      values.push(row.metricValues[0].value); // Active Users
+    });
+  
+    return { labels, values };
+  }  

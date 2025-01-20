@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Analytics Dashboard</title>
+  <title>Google Analytics Data</title>
   <script src="https://apis.google.com/js/api.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <h1>Google Analytics Dashboard</h1>
-  <button id="signin-button">Sign In</button>
-  <button id="signout-button" style="display: none;">Sign Out</button>
-  <canvas id="chart" width="400" height="200"></canvas>
+  <h1>Google Analytics Data</h1>
+  
+  <!-- Prikazivanje podataka -->
+  <canvas id="chart"></canvas>
+
+  <!-- Prijava/odjava dugmadi -->
+  <button id="signinButton" onclick="handleAuthClick()">Sign In</button>
+  <button id="signoutButton" onclick="handleSignoutClick()">Sign Out</button>
 
   <script src="../javascript/auth.js"></script>
   <script src="../javascript/analytics.js"></script>
