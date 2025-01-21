@@ -14,16 +14,17 @@ exports.handler = async function(event, context) {
   
   try {
     const response = await axios.get('https://analytics.googleapis.com/v3/data/ga', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params: {
-        ids: 'ga:443269906',
-        'start-date': '30daysAgo',
-        'end-date': 'today',
-        metrics: 'ga:activeUsers,ga:sessions,ga:averageSessionDuration',
-      },
-    });
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: {
+          ids: 'ga:443269906',
+          'start-date': '30daysAgo',
+          'end-date': 'today',
+          metrics: 'ga:activeUsers,ga:sessions,ga:averageSessionDuration',
+        },
+      });
+     
 
     return {
       statusCode: 200,
