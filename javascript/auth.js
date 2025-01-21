@@ -181,7 +181,6 @@ function gisLoaded() {
   if (tokenClient) {
     console.log("TokenClient je inicijaliziran.");
   }
-  
   gisInited = true;
   maybeEnableButtons();
 }
@@ -196,6 +195,7 @@ function handleAuthClick() {
   if (tokenClient) {
     console.log("Prijava započela...");
     tokenClient.requestAccessToken(); // Pokreće autentifikaciju korisnika
+    console.log("Prijava završena...");
   }
 }
 
