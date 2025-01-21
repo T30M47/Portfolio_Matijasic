@@ -165,7 +165,10 @@ function gapiLoaded() {
 async function initializeGapiClient() {
   await gapi.client.init({
     apiKey: API_KEY,
+    clientId: CLIENT_ID,
     discoveryDocs: DISCOVERY_DOCS,
+    scope: SCOPES,
+    redirectUri: 'https://eportfoliomatijasic.netlify.app/html/chart.html'
   });
   gapiInited = true;
   maybeEnableButtons();
@@ -176,6 +179,7 @@ function gisLoaded() {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: SCOPES,
+    redirect_uri: 'https://eportfoliomatijasic.netlify.app/html/chart.html',
     callback: (tokenResponse) => {
         console.log("Odgovor od Googlea:", tokenResponse);
         if (tokenResponse.access_token) {
