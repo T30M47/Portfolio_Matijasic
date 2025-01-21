@@ -196,6 +196,7 @@ function handleAuthClick() {
 }
 
 function handleTokenResponse(response) {
+  console.log("Odgovor od Googlea:", response);
   if (response.access_token) {
     localStorage.setItem("access_token", response.access_token);
     isAuthenticated = true;
@@ -203,6 +204,7 @@ function handleTokenResponse(response) {
     if (chartElement) {
       chartElement.style.display = 'block'; // Prikazuje grafikon
     }
+    window.location.href = 'https://eportfoliomatijasic.netlify.app/html/redirect.html';
     fetchAnalyticsData();
   } else {
     console.error('Nema pristupnog tokena!');
