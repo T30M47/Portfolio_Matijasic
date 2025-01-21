@@ -1,3 +1,11 @@
 /* 
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
+  Content-Security-Policy: default-src 'self'; 
+    script-src 'self' https://apis.google.com https://accounts.google.com https://cdn.jsdelivr.net https://www.gstatic.com; 
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+    img-src 'self' data:; 
+    connect-src 'self' https://www.googleapis.com; 
+    font-src 'self' https://fonts.gstatic.com;
+    object-src 'none'; 
+    upgrade-insecure-requests;
