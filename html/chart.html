@@ -79,10 +79,10 @@
       }
 
       try {
-        const response = await fetch(`https://analytics.googleapis.com/v3/data/ga?ids=ga%3A443269906&start-date=30daysAgo&end-date=today&metrics=ga%3AactiveUsers,ga%Asessions,ga%AaverageSessionDuration`, {
+        const response = await fetch('/.netlify/functions/analytics', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`, // Slanje tokena u zaglavlju
           },
         });
 
