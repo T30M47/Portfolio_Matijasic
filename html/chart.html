@@ -50,7 +50,13 @@
 
     // Funkcija za pokretanje autentifikacije
     function handleAuthClick() {
-      google.accounts.id.prompt();  // Pokreće prompt za prijavu
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleCredentialResponse,
+      });
+
+      // Pokreće prompt za prijavu
+      google.accounts.id.prompt(); 
     }
 
     // Funkcija za odjavu korisnika
