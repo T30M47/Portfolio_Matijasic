@@ -178,6 +178,10 @@ function gisLoaded() {
     scope: SCOPES,
     callback: handleTokenResponse, // Postavite callback za token
   });
+  if (tokenClient) {
+    console.log("TokenClient je inicijaliziran.");
+  }
+  
   gisInited = true;
   maybeEnableButtons();
 }
