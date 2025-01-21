@@ -79,7 +79,7 @@
       }
 
       try {
-        const response = await fetch('/.netlify/functions/analytics', {
+        const response = await fetch('/netlify/functions/analytics', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`, // Slanje tokena u zaglavlju
