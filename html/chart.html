@@ -35,6 +35,7 @@
 
     // Funkcija koja se poziva kad je korisnik autentificiran
     function handleCredentialResponse(response) {
+      console.log(response);
       const credential = response.credential;
       const token = credential.id_token; // ID token je sada ispravno uzet iz response.credential
 
