@@ -3,15 +3,15 @@
 <head>
   <title>Google Analytics Chart</title>
   <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self'; 
-        script-src 'self' https://apis.google.com https://accounts.google.com https://cdn.jsdelivr.net; 
-        style-src 'self' 'unsafe-inline'; 
-        img-src 'self' data:;
-        connect-src 'self' https://www.googleapis.com;
-        font-src 'self' https://fonts.gstatic.com;
-        object-src 'none';
-        upgrade-insecure-requests;
-    ">
+    default-src 'self'; 
+    script-src 'self' https://apis.google.com https://accounts.google.com https://cdn.jsdelivr.net https://www.gstatic.com; 
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+    img-src 'self' data:; 
+    connect-src 'self' https://www.googleapis.com; 
+    font-src 'self' https://fonts.gstatic.com; 
+    object-src 'none'; 
+    upgrade-insecure-requests;
+  ">
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="../javascript/auth.js"></script>
