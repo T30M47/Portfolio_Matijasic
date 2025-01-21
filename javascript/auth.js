@@ -121,7 +121,7 @@ function updateSigninStatus(isSignedIn) {
   document.getElementById('signout_button').style.display = isSignedIn ? 'inline' : 'none';
 }*/
 
-const CLIENT_ID = '214036241518-be5frrk0bus3h05oo3dt6b2t1j19onr3.apps.googleusercontent.com';
+/*const CLIENT_ID = '214036241518-be5frrk0bus3h05oo3dt6b2t1j19onr3.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyAJugTkVuqv5BbYEPm9rr7U4mPSA5fvdmI';
 const DISCOVERY_DOCS =
     ["https://analyticsdata.googleapis.com/$discovery/rest?version=v1"];
@@ -142,4 +142,139 @@ function initClient() {
         console.log("Google API spreman!");
     });
 }
-gapi.load("client:auth2", initClient);
+gapi.load("client:auth2", initClient);*/
+
+// Postavke za autentifikaciju
+const CLIENT_ID = '214036241518-be5frrk0bus3h05oo3dt6b2t1j19onr3.apps.googleusercontent.com';
+const API_KEY = 'AIzaSyAJugTkVuqv5BbYEPm9rr7U4mPSA5fvdmI';
+const DISCOVERY_DOCS = [
+  'https://www.googleapis.com/discovery/v1/apis/analytics/v3/rest'
+];
+const SCOPES = 'https://www.googleapis.com/auth/analytics.readonly';
+
+let tokenClient;
+let gapiInited = false;
+let gisInited = false;
+let isAuthenticated = false;
+
+// Inicijalizacija GAPI klijenta
+function gapiLoaded() {
+  gapi.load('client', initializeGapiClient);
+}
+
+async function initializeGapiClient() {
+  await gapi.client.init({
+    apiKey: API_KEY,
+    discoveryDocs: DISCOVERY_DOCS,
+  });
+  gapiInited = true;
+  maybeEnableButtons();
+}
+
+// Inicijalizacija Google Identity Services
+function gisLoaded() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: '', // Callback se postavlja tijekom zahtjeva za token
+  });
+  gisInited = true;
+  maybeEnableButtons();
+}
+
+function maybeEnableButtons() {
+  if (gapiInited && gisInited) {
+    document.querySelector('button[onclick="handleAuthClick()"]').disabled = false;
+  }
+}
+
+function handleAuthClick() {
+  tokenClient.callback = async (response) => {
+    if (response.error) {
+      console.error(response);
+      throw response;
+    }
+    console.log('Authorization successful');
+    isAuthenticated = true;
+    document.getElementById('chart').style.display = 'block';
+    await fetchAnalyticsData();
+  };
+
+  if (gapi.client.getToken() === null) {
+    // Traži korisnika za autentifikaciju
+    tokenClient.requestAccessToken({prompt: 'consent'});
+  } else {
+    // Osiguraj osvježavanje tokena
+    tokenClient.requestAccessToken({prompt: ''});
+  }
+}
+
+function handleSignoutClick() {
+  const token = gapi.client.getToken();
+  if (token !== null) {
+    google.accounts.oauth2.revoke(token.access_token, () => {
+      console.log('User signed out.');
+      isAuthenticated = false;
+      document.getElementById('chart').style.display = 'none';
+    });
+    gapi.client.setToken(null);
+  }
+}
+
+function transformAnalyticsData(result) {
+  const labels = result.rows.map(row => row.dimensionValues.map(dv => dv.value).join(' - '));
+  const data = result.rows.map(row => row.metricValues[0].value);
+
+  return {
+    labels,
+    datasets: [{
+      label: 'Active Users',
+      data,
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      borderWidth: 1
+    }]
+  };
+}
+
+async function fetchAnalyticsData() {
+  try {
+    const response = await gapi.client.analyticsdata.properties.runReport({
+      property: "properties/443269906",
+      requestBody: {
+        dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+        dimensions: [{ name: "country" }, { name: "deviceCategory" }, { name: "pagePath" }],
+        metrics: [{ name: "activeUsers" }, { name: "sessions" }, { name: "averageSessionDuration" }]
+      }
+    });
+    console.log(response.result);
+
+    const data = transformAnalyticsData(response.result);
+    renderChart(data);
+  } catch (err) {
+    console.error('Error fetching analytics data:', err);
+  }
+}
+
+function renderChart(data) {
+  const ctx = document.getElementById('chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar', // Tip grafikona
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Google Analytics Data'
+        }
+      }
+    }
+  });
+}
+  
+// Sakrij chart na početku
+document.getElementById('chart').style.display = 'none';
