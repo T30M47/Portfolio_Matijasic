@@ -190,6 +190,7 @@ function maybeEnableButtons() {
 
 function handleAuthClick() {
   if (tokenClient) {
+    console.log("Prijava započela...");
     tokenClient.requestAccessToken(); // Pokreće autentifikaciju korisnika
   }
 }
