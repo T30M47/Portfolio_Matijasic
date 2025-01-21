@@ -204,6 +204,8 @@ function handleTokenResponse(response) {
       chartElement.style.display = 'block'; // Prikazuje grafikon
     }
     fetchAnalyticsData();
+  } else {
+    console.error('Nema pristupnog tokena!');
   }
 }
 
