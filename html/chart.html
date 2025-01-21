@@ -37,10 +37,10 @@
     function handleCredentialResponse(response) {
       console.log(response);
       const credential = response.credential;
-      const token = credential.id_token; // ID token je sada ispravno uzet iz response.credential
 
-      if (token) {
-        localStorage.setItem("access_token", token);
+      if (credential) {
+        const token = credential; // Ako je "credential" JWT token, koristit ćemo ga direktno
+        localStorage.setItem("access_token", token); // Spremite ga u localStorage
         isAuthenticated = true;
         document.getElementById('chart').style.display = 'block';
         fetchAnalyticsData();
