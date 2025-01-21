@@ -7,8 +7,8 @@
   <!-- <script src="../javascript/auth.js"></script> -->
   <!-- <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
   <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>  -->
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script src="https://accounts.google.com/gsi/client"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- <script src="https://accounts.google.com/gsi/client"></script> -->
 </head> 
 <body>
   <!-- Gumbi za autentifikaciju -->
@@ -48,7 +48,6 @@
         }).then(() => {
           gapiInited = true;
           maybeEnableButtons();
-          // Inicijaliziraj GIS nakon što je GAPI klijent inicijaliziran
           tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID,
             scope: SCOPES,
@@ -56,7 +55,7 @@
             callback: handleTokenResponse
           });
           gisInited = true;
-          maybeEnableButtons();  // Premjestite ovu liniju unutar 'then' nakon inicijalizacije
+          maybeEnableButtons();
         }).catch((err) => {
           console.error("Greška u inicijalizaciji GAPI klijenta:", err);
         });
@@ -64,7 +63,6 @@
     }
 
     function maybeEnableButtons() {
-      // Provjera da li su GAPI i GIS inicijalizirani prije nego što omogućimo gumb za prijavu
       if (gapiInited && gisInited) {
         document.querySelector('button[onclick="handleAuthClick()"]').disabled = false;
       }
@@ -86,10 +84,24 @@
     }
 
     function handleAuthClick() {
-      if (tokenClient) {
-        console.log("Prijava započela...");
-        tokenClient.requestAccessToken(); // Pokreće autentifikaciju korisnika
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.prompt();
+    }
+
+    function handleCredentialResponse(response) {
+      const token = response.credential;
+      console.log("Google Login Token:", token);
+
+      localStorage.setItem("access_token", token);
+      isAuthenticated = true;
+      const chartElement = document.getElementById('chart');
+      if (chartElement) {
+        chartElement.style.display = 'block';
       }
+      fetchAnalyticsData();
     }
 
     function handleSignoutClick() {
