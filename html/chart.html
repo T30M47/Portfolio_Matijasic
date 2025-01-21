@@ -56,7 +56,7 @@
             callback: handleTokenResponse
           });
           gisInited = true;
-          maybeEnableButtons();
+          maybeEnableButtons();  // Premjestite ovu liniju unutar 'then' nakon inicijalizacije
         }).catch((err) => {
           console.error("Greška u inicijalizaciji GAPI klijenta:", err);
         });
@@ -64,6 +64,7 @@
     }
 
     function maybeEnableButtons() {
+      // Provjera da li su GAPI i GIS inicijalizirani prije nego što omogućimo gumb za prijavu
       if (gapiInited && gisInited) {
         document.querySelector('button[onclick="handleAuthClick()"]').disabled = false;
       }
