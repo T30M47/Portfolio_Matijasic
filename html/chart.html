@@ -9,19 +9,21 @@
   <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>  -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <!-- <script src="https://accounts.google.com/gsi/client"></script> -->
+  <link rel="stylesheet" href="styles.css">
 </head> 
 <body>
   <!-- Gumbi za autentifikaciju -->
   <!-- <button id="signin-button" onclick="handleAuthClick()">Prijavi se</button>
   <button id="signout-button" onclick="handleSignoutClick()">Odjavi se</button> -->
 
+  <!-- Gumbi za autentifikaciju -->
   <button onclick="handleAuthClick()" disabled>Prijavite se s Google računom</button>
 
   <!-- Tipka za odjavu -->
-  <button onclick="handleSignoutClick()" style="display:none;">Odjavite se</button>
+  <button onclick="handleSignoutClick()">Odjavite se</button>
 
   <!-- Platno za Chart.js grafikon -->
-  <canvas id="chart" style="display:none;" width="400" height="200"></canvas>
+  <canvas id="chart"></canvas>
 
   <script src="hh.js"></script>
 
