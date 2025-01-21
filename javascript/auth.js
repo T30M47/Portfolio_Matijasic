@@ -176,7 +176,7 @@ function gisLoaded() {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: SCOPES,
-    callback: '', // Callback se postavlja tijekom zahtjeva za token
+    callback: handleTokenResponse, // Postavite callback za token
   });
   gisInited = true;
   maybeEnableButtons();
@@ -189,23 +189,17 @@ function maybeEnableButtons() {
 }
 
 function handleAuthClick() {
-  tokenClient.callback = async (response) => {
-    if (response.error) {
-      console.error(response);
-      throw response;
-    }
-    console.log('Authorization successful');
-    isAuthenticated = true;
-    document.getElementById('chart').style.display = 'block';
-    await fetchAnalyticsData();
-  };
+  if (tokenClient) {
+    tokenClient.requestAccessToken(); // Pokreće autentifikaciju korisnika
+  }
+}
 
-  if (gapi.client.getToken() === null) {
-    // Traži korisnika za autentifikaciju
-    tokenClient.requestAccessToken({prompt: 'consent'});
-  } else {
-    // Osiguraj osvježavanje tokena
-    tokenClient.requestAccessToken({prompt: ''});
+function handleTokenResponse(response) {
+  if (response.access_token) {
+    localStorage.setItem("access_token", response.access_token);
+    isAuthenticated = true;
+    document.getElementById('chart').style.display = 'block'; // Prikazuje grafikon nakon prijave
+    fetchAnalyticsData();
   }
 }
 
@@ -238,7 +232,14 @@ function transformAnalyticsData(result) {
 }
 
 async function fetchAnalyticsData() {
+  const token = localStorage.getItem("access_token");
+  if (!token) {
+    console.error("Nema pristupnog tokena. Prijavite se ponovno.");
+    return;
+  }
+
   try {
+    gapi.client.setToken({ access_token: token });
     const response = await gapi.client.analyticsdata.properties.runReport({
       property: "properties/443269906",
       requestBody: {
@@ -248,11 +249,10 @@ async function fetchAnalyticsData() {
       }
     });
     console.log(response.result);
-
     const data = transformAnalyticsData(response.result);
     renderChart(data);
   } catch (err) {
-    console.error('Error fetching analytics data:', err);
+    console.error("Greška u dohvaćanju analitike:", err);
   }
 }
 
@@ -275,6 +275,6 @@ function renderChart(data) {
     }
   });
 }
-  
+
 // Sakrij chart na početku
 document.getElementById('chart').style.display = 'none';
