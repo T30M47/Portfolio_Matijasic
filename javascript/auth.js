@@ -198,7 +198,10 @@ function handleTokenResponse(response) {
   if (response.access_token) {
     localStorage.setItem("access_token", response.access_token);
     isAuthenticated = true;
-    document.getElementById('chart').style.display = 'block'; // Prikazuje grafikon nakon prijave
+    const chartElement = document.getElementById('chart');
+    if (chartElement) {
+      chartElement.style.display = 'block'; // Prikazuje grafikon
+    }
     fetchAnalyticsData();
   }
 }
@@ -275,6 +278,3 @@ function renderChart(data) {
     }
   });
 }
-
-// Sakrij chart na početku
-document.getElementById('chart').style.display = 'none';
