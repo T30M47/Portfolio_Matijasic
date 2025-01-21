@@ -2,16 +2,24 @@
 <html>
 <head>
   <title>Google Analytics Chart</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://apis.google.com;">
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="../javascript/auth.js"></script>
-  <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-  <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>  
+  <!-- <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>  -->
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://accounts.google.com/gsi/client"></script>
 </head> 
 <body>
   <!-- Gumbi za autentifikaciju -->
-  <button id="signin-button" onclick="handleAuthClick()">Prijavi se</button>
-  <button id="signout-button" onclick="handleSignoutClick()">Odjavi se</button>
+  <!-- <button id="signin-button" onclick="handleAuthClick()">Prijavi se</button>
+  <button id="signout-button" onclick="handleSignoutClick()">Odjavi se</button> -->
+
+  <button onclick="handleAuthClick()" disabled>Prijavite se s Google računom</button>
+
+  <!-- Tipka za odjavu -->
+  <button onclick="handleSignoutClick()" style="display:none;">Odjavite se</button>
 
   <!-- Platno za Chart.js grafikon -->
   <canvas id="chart" style="display:none;" width="400" height="200"></canvas>

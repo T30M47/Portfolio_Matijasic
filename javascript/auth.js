@@ -151,6 +151,7 @@ const DISCOVERY_DOCS = [
   'https://www.googleapis.com/discovery/v1/apis/analytics/v3/rest'
 ];
 const SCOPES = 'https://www.googleapis.com/auth/analytics.readonly';
+const REDIRECT_URI = 'https://eportfoliomatijasic.netlify.app/html/chart.html';
 
 let tokenClient;
 let gapiInited = false;
@@ -158,7 +159,7 @@ let gisInited = false;
 let isAuthenticated = false;
 
 // Inicijalizacija GAPI klijenta
-function gapiLoaded() {
+/*function gapiLoaded() {
   gapi.load('client', initializeGapiClient);
 }
 
@@ -200,11 +201,52 @@ function gisLoaded() {
   }
   gisInited = true;
   maybeEnableButtons();
+}*/
+
+function gapiLoaded() {
+  gapi.load('client', () => {
+    gapi.client.init({
+      apiKey: API_KEY,
+      clientId: CLIENT_ID,
+      discoveryDocs: DISCOVERY_DOCS,
+      scope: SCOPES,
+      redirectUri: REDIRECT_URI
+    }).then(() => {
+      gapiInited = true;
+      maybeEnableButtons();
+      // Inicijaliziraj GIS nakon što je GAPI klijent inicijaliziran
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: SCOPES,
+        redirect_uri: REDIRECT_URI,
+        callback: handleTokenResponse
+      });
+      gisInited = true;
+      maybeEnableButtons();
+    }).catch((err) => {
+      console.error("Greška u inicijalizaciji GAPI klijenta:", err);
+    });
+  });
 }
 
 function maybeEnableButtons() {
   if (gapiInited && gisInited) {
     document.querySelector('button[onclick="handleAuthClick()"]').disabled = false;
+  }
+}
+
+function handleTokenResponse(tokenResponse) {
+  console.log("Odgovor od Googlea:", tokenResponse);
+  if (tokenResponse.access_token) {
+    localStorage.setItem("access_token", tokenResponse.access_token);
+    isAuthenticated = true;
+    const chartElement = document.getElementById('chart');
+    if (chartElement) {
+      chartElement.style.display = 'block';
+    }
+    fetchAnalyticsData();
+  } else {
+    console.error('Nema pristupnog tokena!');
   }
 }
 
