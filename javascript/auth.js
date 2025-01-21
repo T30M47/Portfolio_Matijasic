@@ -176,7 +176,20 @@ function gisLoaded() {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: SCOPES,
-    callback: handleTokenResponse, // Postavite callback za token
+    callback: (tokenResponse) => {
+        console.log("Odgovor od Googlea:", tokenResponse);
+        if (tokenResponse.access_token) {
+            localStorage.setItem("access_token", tokenResponse.access_token);
+            isAuthenticated = true;
+            const chartElement = document.getElementById('chart');
+            if (chartElement) {
+                chartElement.style.display = 'block';
+            }
+            fetchAnalyticsData();
+        } else {
+            console.error('Nema pristupnog tokena!');
+        }
+    },
   });
   if (tokenClient) {
     console.log("TokenClient je inicijaliziran.");
@@ -195,23 +208,6 @@ function handleAuthClick() {
   if (tokenClient) {
     console.log("Prijava započela...");
     tokenClient.requestAccessToken(); // Pokreće autentifikaciju korisnika
-    console.log("Prijava završena...");
-  }
-}
-
-function handleTokenResponse(response) {
-  console.log("Odgovor od Googlea:", response);
-  if (response.access_token) {
-    localStorage.setItem("access_token", response.access_token);
-    isAuthenticated = true;
-    const chartElement = document.getElementById('chart');
-    if (chartElement) {
-      chartElement.style.display = 'block'; // Prikazuje grafikon
-    }
-    window.location.href = 'https://eportfoliomatijasic.netlify.app/html/redirect.html';
-    fetchAnalyticsData();
-  } else {
-    console.error('Nema pristupnog tokena!');
   }
 }
 
